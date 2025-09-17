@@ -1,0 +1,92 @@
+using System;
+
+namespace MathOperations
+{
+    internal class ComputationEngine
+    {
+        static void Execute()
+        {
+            double firstValue = GetNumericInput("Введите число a: ", "a");
+            
+            string operationSymbol = GetOperationSymbol();
+            
+            if (operationSymbol == "sqrt" || operationSymbol == "inv")
+            {
+                ProcessUnaryOperation(firstValue, operationSymbol);
+                return;
+            }
+
+            double secondValue = GetNumericInput("Введите число b: ", "b");
+            ProcessBinaryOperation(firstValue, secondValue, operationSymbol);
+        }
+
+        static double GetNumericInput(string prompt, string variableName)
+        {
+            Console.Write(prompt);
+            if (double.TryParse(Console.ReadLine(), out double result))
+            {
+                return result;
+            }
+            Console.WriteLine($"Ошибка! Некорректное число {variableName}.");
+            Environment.Exit(1);
+            return 0;
+        }
+
+        static string GetOperationSymbol()
+        {
+            Console.Write("Выберите операцию (+, -, *, /, **, sqrt, inv): ");
+            return Console.ReadLine()?.Trim() ?? "";
+        }
+
+        static void ProcessUnaryOperation(double value, string operation)
+        {
+            if (operation == "sqrt")
+            {
+                if (value >= 0)
+                    Console.WriteLine($"√{value} = {Math.Sqrt(value)}");
+                else
+                    Console.WriteLine("Ошибка! Корень из отрицательного числа.");
+            }
+            else if (operation == "inv")
+            {
+                if (value != 0)
+                    Console.WriteLine($"1/{value} = {1/value}");
+                else
+                    Console.WriteLine("Ошибка! Деление на ноль.");
+            }
+        }
+
+        static void ProcessBinaryOperation(double x, double y, string operation)
+        {
+            switch (operation)
+            {
+                case "+":
+                    DisplayResult(x, y, x + y, "+");
+                    break;
+                case "-":
+                    DisplayResult(x, y, x - y, "-");
+                    break;
+                case "*":
+                    DisplayResult(x, y, x * y, "×");
+                    break;
+                case "/":
+                    if (y != 0)
+                        DisplayResult(x, y, x / y, "÷");
+                    else
+                        Console.WriteLine("Ошибка! Деление на ноль.");
+                    break;
+                case "**":
+                    DisplayResult(x, y, Math.Pow(x, y), "^");
+                    break;
+                default:
+                    Console.WriteLine("Ошибка! Неизвестная операция.");
+                    break;
+            }
+        }
+
+        static void DisplayResult(double x, double y, double result, string symbol)
+        {
+            Console.WriteLine($"{x} {symbol} {y} = {result}");
+        }
+    }
+}
